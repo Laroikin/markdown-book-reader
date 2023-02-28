@@ -1,4 +1,5 @@
 import { getPageBySlug, getPagesSlugs } from "lib/api";
+
 export default function Page({ page }: { page: string }) {
   const footnoteSection = page.slice(
     page.indexOf('<section data-footnotes class="footnotes">'),
@@ -8,24 +9,39 @@ export default function Page({ page }: { page: string }) {
   const textBlocks = page
     .split("\n")
     .map((paragraph) => {
-      paragraph = '<div class="max-w-[70%] grow">' + paragraph + "</div>";
+      paragraph = '<div class="max-w-[65%] text-xl">' + paragraph + "</div>";
       if (paragraph.includes("<sup>")) {
-        const link = paragraph.slice(
-          paragraph.search('<a href="#') + 10,
-          paragraph.search(" id") - 1
-        );
-        const li = '<li id="' + link;
-        const footnote = footnoteSection
-          .slice(
-            footnoteSection.search(li),
-            footnoteSection.indexOf("</li>", footnoteSection.search(li))
-          )
-          .split("\n")[1];
+        const allFootnotes = paragraph.split('<a href="#').map((item) => {
+          const thisPartOfPage = paragraph.slice(paragraph.search(item));
+          const link = thisPartOfPage.slice(
+            0,
+            thisPartOfPage.search(" id") - 1
+          );
+          if (!link) return "";
+          const li = '<li id="' + link;
+          console.log(li);
+          const footnote = footnoteSection
+            .slice(
+              footnoteSection.search(li),
+              footnoteSection.indexOf("</li>", footnoteSection.search(li))
+            )
+            .split("\n")[1];
+
+          return (footnote ?? "").replace(
+            "<p>",
+            `<p><sup class="mr-1">${item.slice(
+              item.search(">") + 1,
+              item.search("</a>")
+            )}</sup>`
+          );
+        });
 
         return (
           "<div class='flex justify-between'>" +
           paragraph +
-          `<div class="max-w-[30%] w-full">${footnote ?? ""}</div>` +
+          `<div class="max-w-[30%] w-full text-sm">${
+            allFootnotes.join("") ?? ""
+          }</div>` +
           "</div>"
         );
       }
@@ -33,21 +49,24 @@ export default function Page({ page }: { page: string }) {
     })
     .join("");
 
-  console.log(textBlocks);
   return (
-    <article className="flex h-full">
-      <div
-        className="flex h-fit min-h-full w-full flex-col flex-wrap items-start justify-center"
-        dangerouslySetInnerHTML={{ __html: textBlocks }}
-      ></div>
-    </article>
+    <>
+      <article className="flex h-full">
+        <div
+          className="flex h-fit min-h-full w-full flex-col flex-wrap items-start justify-center"
+          dangerouslySetInnerHTML={{ __html: textBlocks }}
+        ></div>
+      </article>
+    </>
   );
 }
+
 type Params = {
   params: {
     slug: string;
   };
 };
+
 export async function getStaticProps({ params }: Params) {
   const page = await getPageBySlug(params.slug);
   return {
@@ -56,6 +75,7 @@ export async function getStaticProps({ params }: Params) {
     },
   };
 }
+
 export function getStaticPaths() {
   const pages = getPagesSlugs();
   return {
