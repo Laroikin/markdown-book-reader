@@ -17,7 +17,7 @@ const splitRecursive = (
   headingLevel: number,
   currentLevel = 1
 ): SplitResult[] => {
-  const headingRegexBuilder = `^#{${currentLevel}}(?!#)\\s`;
+  const headingRegexBuilder = `^#{${currentLevel}}(?!<=#)\\s`;
   const headingRegex = new RegExp(headingRegexBuilder, "gm");
   let splittedData = sourceData.split(headingRegex);
 
@@ -30,10 +30,9 @@ const splitRecursive = (
     };
 
     if (currentLevel < headingLevel) {
-      const headingRegexBuilder = `^#{${currentLevel + 1}}(?!#)\\s`;
+      const headingRegexBuilder = `^#{${currentLevel + 1}}(?!<=#)\\s`;
       const headingRegex = new RegExp(headingRegexBuilder, "gm");
       const nextHeading = item.split(headingRegex)[0];
-
       if (nextHeading) {
         splitResult.content = nextHeading;
       }
@@ -42,6 +41,8 @@ const splitRecursive = (
 
       if (children) splitResult.children = children;
     }
+
+    splitResult.content = "## " + splitResult.content;
 
     return splitResult ?? "";
   });
@@ -53,7 +54,40 @@ let counter = 1;
 
 const writeToFile = (item: SplitResult) => {
   const file = path.resolve(__dirname, "..", `_pages/${counter}.md`);
-  fs.writeFileSync(file, item.content);
+  const getFootnote = (content: string) => {
+    const footnoteRegex = /\[\^([0-9]+)\]/gm;
+    const footnotes = content.match(footnoteRegex);
+
+    if (footnotes) {
+      const result = footnotes.map((footnote) => {
+        const footnoteNumber = footnote.replace("[^", "").replace("]", "");
+        const regex = new RegExp(`\\[\\^${footnoteNumber}\\]`, "gm");
+        console.log(regex);
+        const matchIndices = Array.from(fileData.matchAll(regex)).map(
+          (x) => x.index
+        );
+
+        console.log(matchIndices);
+
+        const endOfParagraph = fileData.indexOf("\n", matchIndices[1]) + 1;
+
+        console.log(endOfParagraph, "end");
+
+        const footnoteContent = fileData
+          .slice(matchIndices[1], endOfParagraph)
+          .trim();
+
+        return footnoteContent;
+      });
+
+      return result?.join("\n\n");
+    }
+
+    return "";
+  };
+
+  const footnote = getFootnote(item.content) ?? "";
+  fs.writeFileSync(file, item.content + "\n\n" + footnote);
   counter++;
 };
 
@@ -65,6 +99,7 @@ const writeRecursive = (data: SplitResult[]) => {
       const splittedItem = item.content.split(" ");
       if (splittedItem.length >= WORD_COUNT) {
         const chunks = Math.ceil(splittedItem.length / WORD_COUNT);
+        // preserve paragraphs when splitting
         for (let i = 0; i < chunks; i++) {
           const start = i * WORD_COUNT;
           const end = (i + 1) * WORD_COUNT;
