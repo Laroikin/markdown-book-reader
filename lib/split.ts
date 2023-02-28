@@ -62,16 +62,12 @@ const writeToFile = (item: SplitResult) => {
       const result = footnotes.map((footnote) => {
         const footnoteNumber = footnote.replace("[^", "").replace("]", "");
         const regex = new RegExp(`\\[\\^${footnoteNumber}\\]`, "gm");
-        console.log(regex);
+
         const matchIndices = Array.from(fileData.matchAll(regex)).map(
           (x) => x.index
         );
 
-        console.log(matchIndices);
-
         const endOfParagraph = fileData.indexOf("\n", matchIndices[1]) + 1;
-
-        console.log(endOfParagraph, "end");
 
         const footnoteContent = fileData
           .slice(matchIndices[1], endOfParagraph)

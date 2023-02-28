@@ -24,7 +24,7 @@ export default function Page({
       paragraph = '<div class="max-w-[65%] text-xl">' + paragraph + "</div>";
       if (paragraph.includes("<sup>")) {
         const allFootnotes = paragraph.split('<a href="#')?.map((item) => {
-          console.log(item, "lol");
+          
           const thisPartOfPage = paragraph.slice(paragraph.indexOf(item));
           const link = thisPartOfPage.slice(
             0,
@@ -32,7 +32,7 @@ export default function Page({
           );
           if (!link) return "";
           const li = '<li id="' + link;
-          console.log(li);
+          
           const footnote = footnoteSection
             .slice(
               footnoteSection.indexOf(li),
@@ -66,7 +66,7 @@ export default function Page({
 
   useEffect(() => {
     const event = (e: KeyboardEvent) => {
-      console.log(e.key);
+      
       const slug = parseInt(router.query.slug?.toString() ?? "");
       if (e.key === "ArrowRight" && !lastPage) {
         void router.push("/" + (slug + 1).toString());
