@@ -1,24 +1,37 @@
-import markdownToHtml from "lib/markdownToHtml";
+import { getPageBySlug, getPagesSlugs } from "lib/api";
 
-export default function Page({ page }) {
-  return (
-    <Layout>
-      <h1>{page.title}</h1>
-      <div dangerouslySetInnerHTML={{ __html: page.content }} />
-    </Layout>
-  );
+export default function Page({ page }: { page: string }) {
+  console.log(page);
+  return <div dangerouslySetInnerHTML={{ __html: page }}></div>;
 }
 
-export async function getStaticProps({ params }) {
+type Params = {
+  params: {
+    slug: string;
+  };
+};
+
+export async function getStaticProps({ params }: Params) {
   const page = await getPageBySlug(params.slug);
-  const content = await markdownToHtml(page.content || "");
 
   return {
     props: {
-      page: {
-        ...page,
-        content,
-      },
+      page: page.contentHtml,
     },
+  };
+}
+
+export function getStaticPaths() {
+  const pages = getPagesSlugs();
+
+  return {
+    paths: pages.map((page) => {
+      return {
+        params: {
+          slug: page,
+        },
+      };
+    }),
+    fallback: false,
   };
 }
