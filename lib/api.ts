@@ -1,9 +1,7 @@
 import fs from "fs";
 import { join } from "path";
 import matter from "gray-matter";
-import { remark } from "remark";
 import remarkGfm from "remark-gfm";
-import html from "remark-html";
 import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
 import { unified } from "unified";
@@ -30,13 +28,13 @@ export async function getPageBySlug(slug: string) {
   const processedContent = await unified()
     .use(remarkParse)
     .use(remarkGfm)
-    .use(remarkRehype)
+    .use(remarkRehype, {
+      footnoteBackLabel: "",
+    })
     .use(rehypeStringify)
     .process(matterResult.content);
 
   const contentHtml = processedContent.toString();
-
-  console.log(processedContent);
 
   return {
     slug: realSlug,

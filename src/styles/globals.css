@@ -3,15 +3,15 @@
 @tailwind utilities;
 
 h2 {
-  @apply my-4 text-3xl font-bold text-gray-100;
+  @apply my-4 text-3xl font-bold text-zinc-100;
 }
 
 h1 {
-  @apply my-4 text-center text-5xl font-bold text-gray-100;
+  @apply my-4 text-center text-5xl font-bold text-zinc-100;
 }
 
 p {
-  @apply my-2 text-gray-200;
+  @apply my-2 text-zinc-200;
 }
 
 body {
@@ -22,6 +22,11 @@ html {
   @apply h-full;
 }
 
+hr{
+  @apply my-4 border-zinc-700;
+}
+
 #__next {
   @apply h-full;
 }
+
