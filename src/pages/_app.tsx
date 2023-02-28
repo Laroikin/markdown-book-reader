@@ -11,7 +11,7 @@ const playfair = Playfair_Display({
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
-    <main className={`${playfair.variable} font-serif`}>
+    <main className={`${playfair.variable} font-serif h-full`}>
       <Component {...pageProps} />
     </main>
   );

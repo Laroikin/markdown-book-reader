@@ -2,14 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
-h2{
-  @apply text-2xl font-bold text-gray-100 my-4;
+h2 {
+  @apply my-4 text-3xl font-bold text-gray-100;
+}
+
+h1 {
+  @apply my-4 text-center text-5xl font-bold text-gray-100;
 }
 
 p {
-  @apply text-gray-200 my-2;
+  @apply my-2 text-gray-200;
 }
 
-body{
-  @apply bg-zinc-800 max-w-4xl mx-auto px-4;
+body {
+  @apply mx-auto h-full max-w-7xl bg-zinc-800 px-4;
+}
+
+html {
+  @apply h-full;
+}
+
+#__next {
+  @apply h-full;
 }
