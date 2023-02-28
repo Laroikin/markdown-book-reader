@@ -19,6 +19,10 @@ export function getPagesSlugs() {
   return slugs;
 }
 
+export function getNumberOfPages() {
+  return getPagesSlugs().length;
+}
+
 export async function getPageBySlug(slug: string) {
   const realSlug = slug.replace(/\.md$/, "");
   const fullPath = join(pagesDirectory, `${realSlug}.md`);

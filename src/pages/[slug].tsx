@@ -5,9 +5,11 @@ import { useEffect } from "react";
 export default function Page({
   page,
   lastPage,
+  numberOfPages,
 }: {
   page: string;
   lastPage: boolean;
+  numberOfPages: number;
 }) {
   const footnoteSection = page.slice(
     page.indexOf('<section data-footnotes class="footnotes">'),
@@ -94,7 +96,9 @@ export default function Page({
         >
           ← Предыдущая страница
         </button>
-        <p>132/140</p>
+        <p>
+          {parseInt(router.query.slug as string)}/{numberOfPages}
+        </p>
         <button
           className="italic"
           onClick={() => {
@@ -130,6 +134,7 @@ export async function getStaticProps({ params }: Params) {
     props: {
       page: page.contentHtml,
       lastPage,
+      numberOfPages: getPagesSlugs().length,
     },
   };
 }

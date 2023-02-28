@@ -7,11 +7,15 @@ h2 {
 }
 
 h1 {
-  @apply my-4 text-center text-5xl font-bold text-[#fffff8];
+  @apply my-4 text-5xl font-bold text-[#fffff8];
 }
 
 p, button {
   @apply my-2 text-[#fffff8];
+}
+
+nav > p, button{
+  @apply my-2 text-zinc-400;
 }
 
 body {
