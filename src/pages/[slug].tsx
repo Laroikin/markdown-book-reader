@@ -82,7 +82,32 @@ export default function Page({
 
   return (
     <>
-      <article className="flex h-full py-10">
+      <nav className="flex justify-between py-4">
+        <button
+          className="italic"
+          onClick={() => {
+            parseInt(router.query.slug as string) > 1 &&
+              void router.push(
+                (parseInt(router.query.slug as string) - 1).toString()
+              );
+          }}
+        >
+          ← Предыдущая страница
+        </button>
+        <p>132/140</p>
+        <button
+          className="italic"
+          onClick={() => {
+            !lastPage &&
+              void router.push(
+                (parseInt(router.query.slug as string) + 1).toString()
+              );
+          }}
+        >
+          Следующая страница →
+        </button>
+      </nav>
+      <article className="flex py-10">
         <div
           className="items-between flex h-fit min-h-full w-full flex-col flex-wrap justify-center"
           dangerouslySetInnerHTML={{ __html: textBlocks }}

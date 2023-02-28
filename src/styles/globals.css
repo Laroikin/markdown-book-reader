@@ -3,30 +3,29 @@
 @tailwind utilities;
 
 h2 {
-  @apply my-4 text-3xl font-bold text-zinc-100;
+  @apply my-4 text-3xl font-bold text-[#fffff8];
 }
 
 h1 {
-  @apply my-4 text-center text-5xl font-bold text-zinc-100;
+  @apply my-4 text-center text-5xl font-bold text-[#fffff8];
 }
 
-p {
-  @apply my-2 text-zinc-200;
+p, button {
+  @apply my-2 text-[#fffff8];
 }
 
 body {
-  @apply mx-auto h-full max-w-7xl bg-zinc-800 px-4;
+  @apply mx-auto h-full bg-[#121216] px-56;
 }
 
 html {
   @apply h-full;
 }
 
-hr{
+hr {
   @apply my-4 border-zinc-700;
 }
 
 #__next {
   @apply h-full;
 }
-
